@@ -11,7 +11,11 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
-
+import AddFood from "./components/dashboard/AddFood";
+import ViewFood from "./components/dashboard/ViewFood";
+import MyDonations from "./components/dashboard/MyDonations";
+import MyRequests from "./components/dashboard/MyRequests";
+import AdminHub from "./components/dashboard/AdminHub";
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -47,6 +51,11 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/add-food" component={AddFood} />
+            <PrivateRoute exact path="/view-food" component={ViewFood} />
+            <PrivateRoute exact path="/my-donations" component={MyDonations} />
+  <PrivateRoute exact path="/my-requests" component={MyRequests} />
+  <PrivateRoute exact path="/admin-hub" component={AdminHub} />
           </Switch>
         </div>
       </Router>

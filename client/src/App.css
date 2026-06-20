@@ -1,0 +1,28 @@
+/* Custom Modern UX Enhancements */
+.ux-card {
+  border-radius: 12px !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  overflow: hidden;
+}
+
+.ux-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.08) !important;
+}
+
+.status-badge {
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.8px;
+  border-radius: 30px !important;
+  padding: 4px 14px !important;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.metrics-icon {
+  padding: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 10px;
+}

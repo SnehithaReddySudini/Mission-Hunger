@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
 const users = require("./routes/api/users");
+const Food = require("./models/Food");
 
 const app = express();
 
@@ -28,7 +29,7 @@ require("./config/passport")(passport);
 
 // Routes
 app.use("/api/users", users);
-
+app.use("/api/food", require("./routes/api/food"));
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder

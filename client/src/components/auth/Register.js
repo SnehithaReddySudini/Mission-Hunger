@@ -13,12 +13,12 @@ class Register extends Component {
       email: "",
       password: "",
       password2: "",
+      role: "donor",
       errors: {},
     };
   }
 
   componentDidMount() {
-    // If logged in and user navigates to Register page, should redirect them to dashboard
     if (this.props.auth.isAuthenticated) {
       this.props.history.push("/dashboard");
     }
@@ -44,6 +44,7 @@ class Register extends Component {
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2,
+      role: this.state.role,
     };
 
     this.props.registerUser(newUser, this.props.history);
@@ -57,8 +58,7 @@ class Register extends Component {
         <div className="row">
           <div className="col s8 offset-s2">
             <Link to="/" className="btn-flat waves-effect">
-              <i className="material-icons left">keyboard_backspace</i> Back to
-              home
+              <i className="material-icons left">keyboard_backspace</i> Back to home
             </Link>
 
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
@@ -78,9 +78,7 @@ class Register extends Component {
                   error={errors.name}
                   id="name"
                   type="text"
-                  className={classnames("", {
-                    invalid: errors.name,
-                  })}
+                  className={classnames("", { invalid: errors.name })}
                 />
                 <label htmlFor="name">Name</label>
                 <span className="red-text">{errors.name}</span>
@@ -93,9 +91,7 @@ class Register extends Component {
                   error={errors.email}
                   id="email"
                   type="email"
-                  className={classnames("", {
-                    invalid: errors.email,
-                  })}
+                  className={classnames("", { invalid: errors.email })}
                 />
                 <label htmlFor="email">Email</label>
                 <span className="red-text">{errors.email}</span>
@@ -108,9 +104,7 @@ class Register extends Component {
                   error={errors.password}
                   id="password"
                   type="password"
-                  className={classnames("", {
-                    invalid: errors.password,
-                  })}
+                  className={classnames("", { invalid: errors.password })}
                 />
                 <label htmlFor="password">Password</label>
                 <span className="red-text">{errors.password}</span>
@@ -123,21 +117,42 @@ class Register extends Component {
                   error={errors.password2}
                   id="password2"
                   type="password"
-                  className={classnames("", {
-                    invalid: errors.password2,
-                  })}
+                  className={classnames("", { invalid: errors.password2 })}
                 />
                 <label htmlFor="password2">Confirm Password</label>
                 <span className="red-text">{errors.password2}</span>
               </div>
 
-              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+              <div className="col s12" style={{ marginTop: "2rem", marginBottom: "1rem" }}>
+                <label style={{ fontSize: "14px", color: "#212121", fontWeight: "500" }}>
+                  Registering as:
+                </label>
+                <select
+                  id="role"
+                  className="browser-default"
+                  value={this.state.role}
+                  onChange={this.onChange}
+                  style={{
+                    marginTop: "10px",
+                    display: "block",
+                    width: "100%",
+                    height: "45px",
+                    borderRadius: "4px",
+                    borderColor: "#9e9e9e"
+                  }}
+                >
+                  <option value="donor">Donor (I want to donate food)</option>
+                  <option value="ngo">NGO / Receiver (I need food)</option>
+                  <option value="admin">Admin (Track System)</option>
+                </select>
+              </div>
+
+              <div className="col s12" style={{ paddingLeft: "11.250px", marginTop: "2rem" }}>
                 <button
                   style={{
                     width: "150px",
                     borderRadius: "3px",
-                    letterSpacing: "1.5px",
-                    marginTop: "1rem",
+                    letterSpacing: "1.5px"
                   }}
                   type="submit"
                   className="btn btn-large waves-effect waves-light hoverable blue accent-3"
@@ -164,4 +179,5 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
+// THIS IS THE LINE THAT WAS MISSING:
 export default connect(mapStateToProps, { registerUser })(withRouter(Register));
