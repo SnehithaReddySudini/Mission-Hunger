@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -30,6 +32,11 @@ require("./config/passport")(passport);
 // Routes
 app.use("/api/users", users);
 app.use("/api/food", require("./routes/api/food"));
+app.use(
+  "/api/donations",
+  require("./routes/donationDescription.route")
+);
+
 // Serve static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
@@ -39,6 +46,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
 
 const port = process.env.PORT || 5000;
 
