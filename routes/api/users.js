@@ -11,6 +11,9 @@ const validateLoginInput = require("../../validation/login");
 // Load User model
 const User = require("../../models/User");
 
+// Roles allowed at signup (admin is NOT allowed)
+const ALLOWED_SIGNUP_ROLES = ["donor", "receiver", "ngo"];
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -21,30 +24,55 @@ router.post("/register", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then((user) => {
-    if (user) {
-      return res.status(400).json({ email: "Email already exists" });
-    }
+  // Block admin / unknown roles
+  if (req.body.role && !ALLOWED_SIGNUP_ROLES.includes(req.body.role)) {
+    return res
+      .status(403)
+      .json({ role: "This role is not allowed for registration" });
+  }
 
-    const newUser = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      role: req.body.role || "receiver"
-    });
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (user) {
+        return res.status(400).json({ email: "Email already exists" });
+      }
 
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
-
-        newUser.password = hash;
-
-        newUser.save()
-          .then((user) => res.json(user))
-          .catch((err) => console.log(err));
+      const newUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        role: req.body.role || "receiver",
       });
+
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) return res.status(500).json({ error: "Server error" });
+
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) return res.status(500).json({ error: "Server error" });
+
+          newUser.password = hash;
+
+          newUser
+            .save()
+            .then((user) =>
+              res.json({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+              })
+            )
+            .catch((err) => {
+              console.log(err);
+              res.status(500).json({ error: "Could not save user" });
+            });
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: "Server error" });
     });
-  });
 });
 
 // @route POST api/users/login
@@ -70,7 +98,7 @@ router.post("/login", (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
-          role: user.role
+          role: user.role,
         };
 
         jwt.sign(
@@ -78,6 +106,7 @@ router.post("/login", (req, res) => {
           keys.secretOrKey,
           { expiresIn: 31556926 },
           (err, token) => {
+            if (err) return res.status(500).json({ error: "Token error" });
             res.json({
               success: true,
               token: "Bearer " + token,
@@ -90,4 +119,5 @@ router.post("/login", (req, res) => {
     });
   });
 });
+
 module.exports = router;

@@ -1,14 +1,17 @@
 const jwt = require("jsonwebtoken");
+const keys = require("../config/keys");
 
 module.exports = function (req, res, next) {
-  const token = req.header("Authorization");
+  const header = req.header("Authorization");
 
-  if (!token) {
+  if (!header) {
     return res.status(401).json({ message: "No token" });
   }
 
+  const token = header.startsWith("Bearer ") ? header.slice(7) : header;
+
   try {
-    const decoded = jwt.verify(token, "secretkey");
+    const decoded = jwt.verify(token, keys.secretOrKey);
     req.user = decoded;
     next();
   } catch (err) {

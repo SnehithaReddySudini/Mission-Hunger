@@ -11,7 +11,7 @@ class Landing extends Component {
               <span style={{ fontFamily: "monospace" }}>FOOD DONATION</span>
             </h4>
             <p className="flow-text grey-text text-darken-1">
-             Login to your account
+            Login to your account
             </p>
             <div>
               <a

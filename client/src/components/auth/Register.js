@@ -143,7 +143,7 @@ class Register extends Component {
                 >
                   <option value="donor">Donor (I want to donate food)</option>
                   <option value="ngo">NGO / Receiver (I need food)</option>
-                  <option value="admin">Admin (Track System)</option>
+                  
                 </select>
               </div>
 
